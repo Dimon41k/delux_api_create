@@ -1,0 +1,23 @@
+{
+  "name": "lenal",
+  "version": "1.0.0",
+  "description": "Description",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/username/repository.git"
+  },
+  "dependencies": {
+    "express": "^4.16.1",
+    "js-stringify": "^1.0.2",
+    "request": "^2.83.0",
+    "superagent": "^3.5.2",
+    "url": "^0.11.0",
+    "utf8safe-uhex": "^1.0.1"
+  }
+}
