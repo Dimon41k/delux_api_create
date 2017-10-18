@@ -1,7 +1,24 @@
 var request = require("request");
 var server = require("http");
 var urlParser = require("url");
-var urlParser = require("utf8");
+var qs = require('querystring');
+function getPostData(req, res) {
+    return new Promise(function(resolve, reject){
+            if (req.method == 'POST') {
+            var jsonString = '';
+    
+            req.on('data', function (data) {
+                jsonString += data;
+            });
+    
+            req.on('end', function () {
+                resolve(decodeURIComponent(jsonString));
+            });
+    
+        }
+    });
+}
+
 
 var params1 = [
     {
