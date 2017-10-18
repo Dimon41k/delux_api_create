@@ -2,23 +2,6 @@ var request = require("request");
 var server = require("http");
 var urlParser = require("url");
 var qs = require('querystring');
-function getPostData(req, res) {
-    return new Promise(function(resolve, reject){
-            if (req.method == 'POST') {
-            var jsonString = '';
-    
-            req.on('data', function (data) {
-                jsonString += data;
-            });
-    
-            req.on('end', function () {
-                resolve(decodeURIComponent(jsonString));
-            });
-    
-        }
-    });
-}
-
 
 var params1 = [
     {
@@ -70,6 +53,22 @@ var params1 = [
 
 ];
 var mP = [];
+function getPostData(req, res) {
+    return new Promise(function(resolve, reject){
+            if (req.method == 'POST') {
+            var jsonString = '';
+    
+            req.on('data', function (data) {
+                jsonString += data;
+            });
+    
+            req.on('end', function () {
+                resolve(jsonString);
+            });
+    
+        }
+    });
+}
 
 function getData(urls) {
 var conteiner = [];
@@ -112,7 +111,7 @@ urls.forEach(function(url, idx, array) {
 
 function parseGetString(req) {
     
-    var q = urlParser.parse(decodeURIComponent(req.url), true).query;
+    var q = urlParser.parse(decodeURIComponent("/?"+req), true).query;
     var counter = 0;
     var params = [];
         for(point in q) {
@@ -131,11 +130,12 @@ function parseGetString(req) {
 }
 server.createServer(function(req, res) {
         res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
-        getData(parseGetString(req)).then(function(data){
+        getPostData(req,res).then(function(x){
+            getData(parseGetString(x)).then(function(data){
             res.write(JSON.stringify(data));
             res.end();
+            });
         });
-
 }).listen(process.env.PORT, process.env.IP, function() {
-    console.log("server run");
+    console.log("server run" + process.env.PORT + process.env.IP);
 });
