@@ -37,6 +37,7 @@ urls.forEach(function(url, idx, array) {
                     conteiner.push({
                         url: url.url,
                         data: response,
+                        name: url.name,
                         
                     });
                     if (conteiner.length == array.length) {
@@ -53,7 +54,12 @@ urls.forEach(function(url, idx, array) {
                 },
                 body: url.body
                 }, function (error, response, body) {
-                    conteiner.push({url: url.url, data: response});
+                    conteiner.push({
+                        url: url.url,
+                        data: response,
+                        name: url.name,
+                        
+                    });
                     if (conteiner.length == array.length) {
                         resolve(conteiner);
                     }
