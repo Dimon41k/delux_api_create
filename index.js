@@ -5,25 +5,25 @@ var qs = require('querystring');
 /*
 дописать хеддеры в скрипт для большей универсальности
 */
-
 var mP = [];
 function getPostData(req, res) {
     return new Promise(function(resolve, reject){
             if (req.method == 'POST') {
             var jsonString = '';
     
-            req.on('data', function (data) {
+           req.on('data', function (data) {
                 jsonString += data;
             });
     
-            req.on('end', function () {
+           req.on('end', function () {
                 resolve(jsonString);
             });
     
+       }else {
+            res.end("Сделай Post request, чувак. И будет тебе счастье.");
         }
     });
 }
-
 function getData(urls) {
 var conteiner = [];
 return new Promise(resolve => {
@@ -39,11 +39,26 @@ urls.forEach(function(url, idx, array) {
                         data: response,
                         name: url.name,
                         
-                    });
+                   });
                     if (conteiner.length == array.length) {
                         resolve(conteiner);
                     }
                 });
+                function getOtpuskTimeout(){
+                    request({
+                        url:url.url,
+                        method: url.type,
+                        json: true
+                        }, function(error, response, body) {
+                            conteiner.push({
+                                url: url.url,
+                                data: response,
+                                name: url.name,
+                            });
+                        })
+                }
+                if(url.name.indexOf("otpusk") != -1)
+                    setTimeout(getOtpuskTimeout, 4000);
             } else if (url.type === "post") {
                 request({
                 url: url.url,
@@ -59,7 +74,7 @@ urls.forEach(function(url, idx, array) {
                         data: response,
                         name: url.name,
                         
-                    });
+                   });
                     if (conteiner.length == array.length) {
                         resolve(conteiner);
                     }
@@ -68,10 +83,9 @@ urls.forEach(function(url, idx, array) {
         });
     });
 }
-
 function parseGetString(req) {
     
-    var q = urlParser.parse(decodeURIComponent("/?"+req), true).query;
+   var q = urlParser.parse(decodeURIComponent("/?"+req), true).query;
     var counter = 0;
     var params = [];
         for(point in q) {
@@ -85,8 +99,7 @@ function parseGetString(req) {
                   params.push(param);
           }
         }
-
-    return params;
+   return params;
 }
 server.createServer(function(req, res) {
         res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
@@ -96,6 +109,6 @@ server.createServer(function(req, res) {
             res.end();
             });
         });
-}).listen(process.env.PORT, process.env.IP, function() {
+}).listen(8080, function() {
     console.log("server run on " + process.env.IP+ ":" + process.env.PORT);
 });
